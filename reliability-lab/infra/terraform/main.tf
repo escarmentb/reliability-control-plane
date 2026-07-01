@@ -1,0 +1,21 @@
+terraform {
+  required_version = ">= 1.7.0"
+
+  required_providers {
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.32"
+    }
+  }
+}
+
+provider "kubernetes" {
+  config_path = var.kubeconfig_path
+}
+
+resource "kubernetes_namespace" "reliability_lab" {
+  metadata {
+    name = var.namespace
+  }
+}
+

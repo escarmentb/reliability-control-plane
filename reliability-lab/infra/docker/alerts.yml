@@ -1,0 +1,11 @@
+groups:
+  - name: reliability-lab
+    rules:
+      - alert: HighApiErrorRate
+        expr: sum(rate(reliability_lab_requests_total{status=~"5.."}[5m])) / sum(rate(reliability_lab_requests_total[5m])) > 0.02
+        for: 5m
+        labels:
+          severity: page
+        annotations:
+          summary: Reliability Lab API error rate is above 2 percent.
+
