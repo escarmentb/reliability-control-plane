@@ -119,6 +119,7 @@ def summarize(results: list[Attempt]) -> dict[str, object]:
     latencies = [result.latency_ms for result in completed]
     successes = sum(result.success for result in results)
     total = len(results)
+    retries = sum(result.retries for result in results)
     phases: dict[str, dict[str, object]] = {}
     for phase_name in dict.fromkeys(result.phase for result in results):
         phase_results = [result for result in results if result.phase == phase_name]
@@ -131,10 +132,12 @@ def summarize(results: list[Attempt]) -> dict[str, object]:
     return {
         "requests": total,
         "successes": successes,
+        "failures": total - successes,
         "availability": successes / total if total else 1.0,
         "p50_ms": percentile(latencies, 50),
         "p95_ms": percentile(latencies, 95),
-        "retries": sum(result.retries for result in results),
+        "retries": retries,
+        "retry_rate": retries / total if total else 0.0,
         "circuit_rejections": sum(result.circuit_open for result in results),
         "phases": phases,
     }

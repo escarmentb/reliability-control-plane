@@ -27,6 +27,8 @@ def test_summary_and_reports(tmp_path: Path) -> None:
     results = [Attempt("baseline", True, 200, 10, 0), Attempt("incident", False, 503, 30, 2)]
     summary = summarize(results)
     assert summary["availability"] == 0.5
+    assert summary["failures"] == 1
+    assert summary["retry_rate"] == 1.0
     assert summary["p95_ms"] == 30
     json_path, html_path = write_reports(results, tmp_path)
     assert json_path.exists()
