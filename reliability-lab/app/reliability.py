@@ -23,6 +23,14 @@ class SloSnapshot:
         return max(0.0, allowed_bad_ratio - actual_bad_ratio)
 
     @property
+    def error_budget_used(self) -> float:
+        allowed_bad_ratio = 1 - self.objective
+        if allowed_bad_ratio <= 0:
+            return 0.0
+        actual_bad_ratio = 1 - self.availability
+        return min(1.0, max(0.0, actual_bad_ratio / allowed_bad_ratio))
+
+    @property
     def is_burning_budget(self) -> bool:
         return self.availability < self.objective
 
@@ -50,4 +58,3 @@ class InMemoryReliabilityStore:
             successful_requests=self.successful_requests,
             total_requests=self.total_requests,
         )
-

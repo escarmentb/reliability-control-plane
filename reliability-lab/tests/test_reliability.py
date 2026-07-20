@@ -14,4 +14,10 @@ def test_slo_detects_budget_burn() -> None:
     assert snapshot.availability == 0.99
     assert snapshot.is_burning_budget is True
     assert snapshot.error_budget_remaining == 0.0
+    assert snapshot.error_budget_used == 1.0
 
+
+def test_slo_reports_partial_budget_use() -> None:
+    snapshot = SloSnapshot(objective=0.99, successful_requests=995, total_requests=1000)
+
+    assert snapshot.error_budget_used == 0.5
